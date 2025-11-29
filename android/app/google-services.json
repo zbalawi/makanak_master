@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "562359886266",
+    "project_id": "makanak-5b9e9",
+    "storage_bucket": "makanak-5b9e9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:562359886266:android:69928d05ab71a8dac97d83",
+        "android_client_info": {
+          "package_name": "com.example.mkanak_master"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAfrlfkHZU2jxV4t8nu1djrNJox_qpYYE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
