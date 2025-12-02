@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../../core/di.dart';
@@ -19,6 +18,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _addressController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmController = TextEditingController();
 
@@ -29,6 +30,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
+    _phoneController.dispose();
+    _addressController.dispose();
     _passwordController.dispose();
     _confirmController.dispose();
     super.dispose();
@@ -36,6 +39,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Future<void> _register() async {
     if (_formKey.currentState?.validate() != true) return;
+
     if (_passwordController.text.trim() !=
         _confirmController.text.trim()) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -51,6 +55,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         name: _nameController.text.trim(),
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
+        phone: _phoneController.text.trim(),
+        address: _addressController.text.trim(),
         type: _selectedType,
       );
 
@@ -58,7 +64,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _goToHome(session);
     } catch (e) {
       String message = 'خطأ في إنشاء الحساب';
-      if (e.toString().contains('EMAIL_EXISTS')) {
+      final text = e.toString();
+      if (text.contains('EMAIL_EXISTS')) {
         message = 'هذا البريد مسجل من قبل، جرّب تسجل دخول';
       }
       ScaffoldMessenger.of(context).showSnackBar(
@@ -130,6 +137,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     }
                     if (!v.contains('@')) {
                       return 'بريد غير صالح';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _phoneController,
+                  decoration: const InputDecoration(
+                    labelText: 'رقم الموبايل',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.phone,
+                  validator: (v) {
+                    if (v == null || v.trim().isEmpty) {
+                      return 'اكتب رقم الموبايل';
+                    }
+                    if (v.length < 7) {
+                      return 'رقم موبايل قصير جداً';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _addressController,
+                  decoration: const InputDecoration(
+                    labelText: 'العنوان',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (v) {
+                    if (v == null || v.trim().isEmpty) {
+                      return 'اكتب العنوان';
                     }
                     return null;
                   },

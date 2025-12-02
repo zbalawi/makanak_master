@@ -1,4 +1,3 @@
-// presentation/screens/client_home_screen.dart
 import 'package:flutter/material.dart';
 import '../../core/models/order.dart';
 import '../../core/helpers/formatters.dart';
@@ -21,6 +20,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   List<Order> _orders = [];
   bool _isLoading = true;
 
+  int _currentIndex = 0; // للـ BottomNavigationBar
+
   @override
   void initState() {
     super.initState();
@@ -37,38 +38,34 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     });
   }
 
-  void _logout() {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (_) => const SizedBox.shrink()),
-          (route) => false,
-    );
-    Navigator.pushReplacementNamed(context, '/'); // لو حاب تستخدم routes لاحقاً
-  }
-
-  Future<void> _goToNewOrder() async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => NewOrderScreen(clientName: widget.clientName),
-      ),
-    );
-    await _loadData();
-  }
-
   Future<void> _confirmOffer(Order order) async {
     await _presenter.confirmOffer(order.id);
     await _loadData();
   }
 
-  void _goToSettings() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) =>
-            SettingsScreen(userName: widget.clientName, userType: UserType.client),
-      ),
-    );
+  void _onNavTap(int index) async {
+    if (index == 0) {
+      setState(() => _currentIndex = 0);
+    } else if (index == 1) {
+      // طلب جديد
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => NewOrderScreen(clientName: widget.clientName),
+        ),
+      );
+      await _loadData();
+      setState(() => _currentIndex = 0);
+    } else if (index == 2) {
+      // الإعدادات
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const SettingsScreen(),
+        ),
+      );
+      setState(() => _currentIndex = 0);
+    }
   }
 
   @override
@@ -79,24 +76,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('أهلاً يا ${widget.clientName}'),
-        actions: [
-          IconButton(
-            onPressed: _goToSettings,
-            icon: const Icon(Icons.settings),
-          ),
-          IconButton(
-            icon: const Icon(Icons.exit_to_app),
-            onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => const SizedBox.shrink()),
-                    (route) => false,
-              );
-              Navigator.pushReplacementNamed(context, '/');
-            },
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(12),
@@ -110,18 +89,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                 title: const Text('المحفظة'),
                 subtitle: Text('إجمالي الصرف: ${formatPrice(totalSpent)}'),
               ),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: _goToNewOrder,
-                    icon: const Icon(Icons.add),
-                    label: const Text('طلب خدمة جديدة'),
-                  ),
-                ),
-              ],
             ),
             const SizedBox(height: 12),
             const Text(
@@ -169,6 +136,24 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: _onNavTap,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list),
+            label: 'طلباتي',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_circle_outline),
+            label: 'طلب جديد',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'الإعدادات',
+          ),
+        ],
       ),
     );
   }
