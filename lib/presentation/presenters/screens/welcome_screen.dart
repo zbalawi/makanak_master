@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../core/models/order.dart';
+import '../../../core/models/order.dart';
 import 'client_home_screen.dart';
 import 'technician_home_screen.dart';
 
@@ -18,7 +18,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     final name = _nameController.text.trim();
     if (name.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('اكتب اسمك أول يا زلمة 😄')),
+        const SnackBar(content: Text('اكتب اسمك')),
       );
       return;
     }

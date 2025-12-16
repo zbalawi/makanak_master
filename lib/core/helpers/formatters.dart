@@ -18,5 +18,5 @@ String statusToText(OrderStatus status) {
 }
 
 String formatPrice(double value) {
-  return value.toStringAsFixed(0); // رقم صحيح بدون كسور
+  return value.toStringAsFixed(0);
 }

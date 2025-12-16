@@ -32,7 +32,6 @@ abstract class AuthRepository {
   });
 }
 
-/// تنفيذ بسيط في الذاكرة (InMemory) لحد ما نربط Firebase
 class InMemoryAuthRepository implements AuthRepository {
   final Map<String, UserSession> _usersByEmail = {};
   final Map<String, String> _passwordsByEmail = {};

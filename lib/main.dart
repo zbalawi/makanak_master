@@ -1,17 +1,15 @@
-
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:mkanak_master/presentation/presenters/state/auth_provider.dart';
+import 'package:mkanak_master/presentation/presenters/state/order_provider.dart';
+import 'package:provider/provider.dart';
 
-import 'firebase_options.dart';
-import 'presentation/screens/splash_screen.dart';
+import 'core/di.dart';
+import 'core/roots/app_roots.dart';
+import 'core/roots/app_router.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+import 'core/theme/app_theme.dart';
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
+void main() {
   runApp(const MakanakApp());
 }
 
@@ -20,13 +18,19 @@ class MakanakApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Makanak',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider(authRepository)),
+        ChangeNotifierProvider(create: (_) => OrderProvider(orderRepository)),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Makanak MVP',
+        theme: AppTheme.light(),
+        // ✅ الثيم
+        initialRoute: AppRoutes.splash,
+        onGenerateRoute: AppRouter.onGenerateRoute,
       ),
-      home: const SplashScreen(),
     );
   }
 }
